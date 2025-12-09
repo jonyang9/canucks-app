@@ -43,7 +43,14 @@ team_codes_dict = {
 team_codes = ['ANA', 'ARI', 'BOS', 'BUF', 'CGY', 'CAR', 'CHI', 'COL', 'CBJ', 'DAL', 'DET', 'EDM', 'FLA', 'LAK', 'MIN', 'MTL', 'NSH', 'NJD', 'NYI', 'NYR', 'OTT', 'PHI', 'PIT', 'SJS', 'SEA', 'STL', 'TBL', 'TOR', 'VAN', 'VGK', 'WSH', 'WPG', 'UTA']
 
 
-# def parse_game_date(game_str)
+def home_game(game_str):
+    # Example of str: '2024-10-09 - Flames 6, Canucks 5'
+    # returns 1 if the Canucks play at home
+    # the site (and most other NHL sites) lists the home team as the second team
+    score_str = game_str.split(' - ')[1].strip()
+    team_scores = score_str.split(', ')
+    return 1 if 'Canucks' in team_scores[1] else 0
+
 
 def validate_season(season):
     # Effect: raises an error if season isn't a string with format: '20252026'
