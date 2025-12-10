@@ -104,3 +104,12 @@ def build_url(season, team1_code, team2_code='All'):
         validate_team_code(team2_code)
     
     return f'https://www.naturalstattrick.com/games.php?fromseason={season}&thru_season={season}&stype=2&sit=5v5&loc=B&team={team1_code}&team2={team2_code}&rate=y'
+
+def build_csv_path(season, team1_code, team2_code=None):
+    validate_season(season)
+    validate_team_code(team1_code)
+    if team2_code is not None:
+        validate_team_code(team2_code)
+        return f"../data/{team2_code}_{team1_code}_{season}.csv"
+    
+    return f"../data/{team1_code}_{season}.csv"
