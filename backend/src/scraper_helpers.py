@@ -20,20 +20,20 @@ team_codes_dict = {
     'Red Wings': 'DET',
     'Oilers': 'EDM',
     'Panthers': 'FLA',
-    'Kings': 'LAK',
+    'Kings': 'L.A',
     'Wild': 'MIN',
     'Canadiens': 'MTL',
     'Predators': 'NSH',
-    'Devils': 'NJD',
+    'Devils': 'N.J',
     'Islanders': 'NYI',
     'Rangers': 'NYR',
     'Senators': 'OTT',
     'Flyers': 'PHI',
     'Penguins': 'PIT',
-    'Sharks': 'SJS',
+    'Sharks': 'S.J',
     'Kraken': 'SEA',
     'Blues': 'STL',
-    'Lightning': 'TBL',
+    'Lightning': 'T.B',
     'Maple Leafs': 'TOR',
     'Canucks': 'VAN',
     'Golden Knights': 'VGK',
@@ -43,7 +43,7 @@ team_codes_dict = {
     'Utah HC': 'UTA'
 }
 
-team_codes = ['ANA', 'ARI', 'BOS', 'BUF', 'CGY', 'CAR', 'CHI', 'COL', 'CBJ', 'DAL', 'DET', 'EDM', 'FLA', 'LAK', 'MIN', 'MTL', 'NSH', 'NJD', 'NYI', 'NYR', 'OTT', 'PHI', 'PIT', 'SJS', 'SEA', 'STL', 'TBL', 'TOR', 'VAN', 'VGK', 'WSH', 'WPG', 'UTA']
+team_codes = team_codes_dict.values()
 
 
 def home_game(game_str):
@@ -131,3 +131,18 @@ def fetch_table(season, team1_code, team2_code):
         df.to_csv(path, index=False)
 
     return df
+
+def game_to_opp_team_code(game_str):
+    # Example of str: '2024-10-09 - Flames 6, Canucks 5' or '2024-10-09 - Blue Jackets 6, Canucks 5'
+    score_str = game_str.split(' - ')[1].strip()
+    team_scores = score_str.split(', ')
+    if 'Canucks' in team_scores[0]:
+        split = team_scores[1].split(' ')
+        split.pop()
+        opp_name = ' '.join(split)
+        return team_codes_dict[opp_name]
+    else:
+        split = team_scores[0].split(' ')
+        split.pop()
+        opp_name = ' '.join(split)
+        return team_codes_dict[opp_name]
