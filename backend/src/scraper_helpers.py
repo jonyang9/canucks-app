@@ -100,34 +100,26 @@ def canucks_win(game_str):
     return 1 if canucks_goals > opp_goals else 0
 
 
-def build_url(season, team1_code, team2_code):
+def build_url(season, team_code):
     validate_season(season)
-    validate_team_code(team1_code)
-    if team2_code is not None:
-        validate_team_code(team2_code)
-        return f'https://www.naturalstattrick.com/games.php?fromseason={season}&thru_season={season}&stype=2&sit=5v5&loc=B&team={team1_code}&team2={team2_code}&rate=y'
-        
-    return f'https://www.naturalstattrick.com/games.php?fromseason={season}&thru_season={season}&stype=2&sit=5v5&loc=B&team={team1_code}&team2=All&rate=y'
+    validate_team_code(team_code)
+    return f'https://www.naturalstattrick.com/games.php?fromseason={season}&thru_season={season}&stype=2&sit=5v5&loc=B&team={team_code}&team2=All&rate=y'
 
-def build_csv_path(season, team1_code, team2_code):
+def build_csv_path(season, team_code):
     validate_season(season)
-    validate_team_code(team1_code)
-    if team2_code is not None:
-        validate_team_code(team2_code)
-        return f"../data/{team2_code}_{team1_code}_{season}.csv"
-    
-    return f"../data/{team1_code}_{season}.csv"
+    validate_team_code(team_code)
+    return f"../data/{team_code}_{season}.csv"
 
 
-def fetch_table(season, team1_code, team2_code):
+def fetch_table(season, team_code):
     # returns a dataframe fetched from disk or naturalstattrick site
-    path = Path(build_csv_path(season, team1_code, team2_code))
+    path = Path(build_csv_path(season, team_code))
     if path.exists():
         print('read from disk.')
         df = pd.read_csv(path)
     else:
         # read_html returns a list of DataFrames; get the first (and only) one
-        df = pd.read_html(build_url(season, team1_code, team2_code), attrs={'id': 'teams'})[0]
+        df = pd.read_html(build_url(season, team_code), attrs={'id': 'teams'})[0]
         df.to_csv(path, index=False)
 
     return df
