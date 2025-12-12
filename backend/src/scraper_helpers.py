@@ -68,6 +68,7 @@ def validate_season(season):
     if second_year - first_year != 1:
         raise ValueError('Season is not the right format')
     
+
 def validate_team_code(team_code):
     # Effect: raises an error if team_code isn't a string and a valid NHL team code
     if not isinstance(team_code, str):
@@ -75,8 +76,6 @@ def validate_team_code(team_code):
     
     if team_code not in team_codes:
         raise ValueError("Team code is not a valid NHL team code")
-
-    
 
 
 def canucks_win(game_str):
@@ -100,6 +99,7 @@ def canucks_win(game_str):
 
     return 1 if canucks_goals > opp_goals else 0
 
+
 def build_url(season, team1_code, team2_code):
     validate_season(season)
     validate_team_code(team1_code)
@@ -117,6 +117,7 @@ def build_csv_path(season, team1_code, team2_code):
         return f"../data/{team2_code}_{team1_code}_{season}.csv"
     
     return f"../data/{team1_code}_{season}.csv"
+
 
 def fetch_table(season, team1_code, team2_code):
     # returns a dataframe fetched from disk or naturalstattrick site

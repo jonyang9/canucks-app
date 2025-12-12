@@ -19,9 +19,6 @@ print(df_raw)
 
 df_eng = pd.DataFrame()
 
-# Add win/loss supervised learning label
-df_eng['Win'] = df_raw['Game'].map(canucks_win, na_action='ignore')
-
 # Each column in Game column looks like: '2024-10-09 - Flames 6, Canucks 5'
 # Subtracts consecutive datetimes creating a timedelta column to calculate the days between games feature
 game_datetimes = pd.to_datetime(df_raw['Game'].map(lambda x: x.split(' - ')[0]))
@@ -30,6 +27,17 @@ df_eng['Days Since Last Game'] = (game_datetimes - game_datetimes.shift(1)).dt.d
 # Add home game feature
 df_eng['Home'] = df_raw['Game'].map(home_game, na_action='ignore')
 
+# Add win/loss supervised learning label
+df_eng['Win'] = df_raw['Game'].map(canucks_win, na_action='ignore')
+
+# Rolling features
+features = ['CF/60', 'CA/60', 'SF/60', 'SA/60', 'xGF/60', 'xGA/60', 'SCF/60', 'SCA/60', 'HDCA/60', 'HDSF/60']
+window_size = 5
+rolling_stats = df_raw[features].rolling(window=window_size).mean().shift(1)
+rolling_stats = rolling_stats.rename(columns=lambda x: f'{x}_rolling')
+
+df_eng = pd.concat(objs=[rolling_stats, df_eng], axis=1)
+
+df_eng = df_eng.dropna()
+
 print(df_eng)
-
-
