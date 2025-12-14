@@ -1,5 +1,7 @@
 from pathlib import Path
 import pandas as pd
+import sys
+import time
 
 # Helpers for scraper.py
 
@@ -108,20 +110,23 @@ def build_url(season, team_code):
 def build_csv_path(season, team_code):
     validate_season(season)
     validate_team_code(team_code)
-    return f"../data/{team_code}_{season}.csv"
+    return Path(__file__).resolve().parent.parent / 'data' / team_code / f'{season}.csv'
 
 
 def fetch_table(season, team_code):
-    # returns a dataframe fetched from disk or naturalstattrick site
-    path = Path(build_csv_path(season, team_code))
+    path = build_csv_path(season, team_code)
+    path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
-        print('read from disk.')
         df = pd.read_csv(path)
     else:
         # read_html returns a list of DataFrames; get the first (and only) one
+        print(f'scraping for season: {season}, team: {team_code}')
         df = pd.read_html(build_url(season, team_code), attrs={'id': 'teams'})[0]
+        time.sleep(240) # respect the site's crawl-delay
+        if df.empty:
+            sys.exit(f'Empty data fetched from website; season: {season}, team: {team_code}')
         df.to_csv(path, index=False)
-
+    
     return df
 
 def game_to_opp_team_code(game_str):
