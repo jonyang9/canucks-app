@@ -105,7 +105,7 @@ def canucks_win(game_str):
 def build_url(season, team_code):
     validate_season(season)
     validate_team_code(team_code)
-    return f'https://www.naturalstattrick.com/games.php?fromseason={season}&thru_season={season}&stype=2&sit=5v5&loc=B&team={team_code}&team2=All&rate=y'
+    return f'https://www.naturalstattrick.com/games.php?fromseason={season}&thruseason={season}&stype=2&sit=5v5&loc=B&team={team_code}&team2=All&rate=y'
 
 def build_csv_path(season, team_code):
     validate_season(season)

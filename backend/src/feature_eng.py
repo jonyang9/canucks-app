@@ -28,8 +28,6 @@ for season in seasons:
     df_eng['Home'] = df_raw['Game'].map(home_game, na_action='ignore')
 
     # Add win/loss supervised learning label
-    print(df_raw)
-    print('len',len(df_raw))
     df_eng['Win'] = df_raw['Game'].map(canucks_win, na_action='ignore')
 
     # Compute rolling statistics for the Canucks
@@ -63,6 +61,8 @@ for season in seasons:
     all_seasons.append(df_eng_combined)
 
 df_eng_all_seasons = pd.concat(all_seasons, ignore_index=True)
-path = Path(__file__).resolve().parent.parent / 'engineered' / f'{seasons[0]}-to-{seasons[len(seasons) - 1]}'
+df_eng_all_seasons = df_eng_all_seasons.round(3)
+file_name = f'{seasons[0]}.csv' if len(seasons) == 1 else f'{seasons[0]}-to-{seasons[len(seasons) - 1]}.csv'
+path = Path(__file__).resolve().parent.parent / 'data' / 'engineered' / file_name
 path.parent.mkdir(parents=True, exist_ok=True)
 df_eng_all_seasons.to_csv(path, index=False)
