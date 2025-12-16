@@ -2,13 +2,14 @@ from pathlib import Path
 import pandas as pd
 import sys
 import time
+from pipeline_config import config
 
 # Helpers for scraper.py
 
 # Useful data structures
 # Note: - Arizona Coyotes transfered to the Utah HC/Mammoth
 #       - Both Mammoth and Utah HC refer to the code 'UTA'
-team_codes_dict = {
+TEAM_CODES_DICT = {
     'Ducks': 'ANA',
     'Coyotes': 'ARI',
     'Bruins': 'BOS',
@@ -45,7 +46,7 @@ team_codes_dict = {
     'Utah HC': 'UTA'
 }
 
-team_codes = team_codes_dict.values()
+TEAM_CODES = TEAM_CODES_DICT.values()
 
 
 def home_game(game_str):
@@ -54,7 +55,7 @@ def home_game(game_str):
     # the site (and most other NHL sites) lists the home team as the second team
     score_str = game_str.split(' - ')[1].strip()
     team_scores = score_str.split(', ')
-    return 1 if 'Canucks' in team_scores[1] else 0
+    return 1 if config['home_team_name'] in team_scores[1] else 0
 
 
 def validate_season(season):
@@ -76,18 +77,18 @@ def validate_team_code(team_code):
     if not isinstance(team_code, str):
         raise TypeError('Team code must be a string')
     
-    if team_code not in team_codes:
+    if team_code not in TEAM_CODES:
         raise ValueError("Team code is not a valid NHL team code")
 
 
-def canucks_win(game_str):
+def game_won(game_str):
     # Example of str: '2024-10-09 - Flames 6, Canucks 5'
     # returns 1 if the Canucks won
     # used to determine outcome of a game as the supervised learning label
     
     score_str = game_str.split(' - ')[1].strip()
     team_scores = score_str.split(', ')
-    if 'Canucks' in team_scores[0]:
+    if config['home_team_name'] in team_scores[0]:
         canucks_goals = team_scores[0].split(' ')[1]
         opp_goals_arr = team_scores[1].split(' ')
         opp_goals = opp_goals_arr[len(opp_goals_arr) - 1]
@@ -133,13 +134,13 @@ def game_to_opp_team_code(game_str):
     # Example of str: '2024-10-09 - Flames 6, Canucks 5' or '2024-10-09 - Blue Jackets 6, Canucks 5'
     score_str = game_str.split(' - ')[1].strip()
     team_scores = score_str.split(', ')
-    if 'Canucks' in team_scores[0]:
+    if config['home_team_name'] in team_scores[0]:
         split = team_scores[1].split(' ')
         split.pop()
         opp_name = ' '.join(split)
-        return team_codes_dict[opp_name]
+        return TEAM_CODES_DICT[opp_name]
     else:
         split = team_scores[0].split(' ')
         split.pop()
         opp_name = ' '.join(split)
-        return team_codes_dict[opp_name]
+        return TEAM_CODES_DICT[opp_name]
