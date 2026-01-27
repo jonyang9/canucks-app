@@ -62,6 +62,6 @@ df_eng_all_seasons = pd.concat(all_seasons, ignore_index=True)
 df_eng_all_seasons = df_eng_all_seasons.dropna()
 df_eng_all_seasons = df_eng_all_seasons.round(3)
 file_name = f'{SEASONS[0]}.csv' if len(SEASONS) == 1 else f'{SEASONS[0]}-to-{SEASONS[len(SEASONS) - 1]}.csv'
-path = Path(__file__).resolve().parent.parent / 'data' / 'engineered' / file_name
+path = Path(__file__).resolve().parent.parent.parent / 'data' / 'engineered' / file_name
 path.parent.mkdir(parents=True, exist_ok=True)
 df_eng_all_seasons.to_csv(path, index=False)

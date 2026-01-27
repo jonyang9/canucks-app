@@ -111,7 +111,7 @@ def build_url(season, team_code):
 def build_csv_path(season, team_code):
     validate_season(season)
     validate_team_code(team_code)
-    return Path(__file__).resolve().parent.parent / 'data' / team_code / f'{season}.csv'
+    return Path(__file__).resolve().parent.parent.parent / 'data' / team_code / f'{season}.csv'
 
 
 def fetch_table(season, team_code):

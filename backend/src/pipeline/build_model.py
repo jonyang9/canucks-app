@@ -5,10 +5,11 @@ from sklearn.model_selection import RandomizedSearchCV, TimeSeriesSplit
 from sklearn.metrics import accuracy_score, log_loss, roc_auc_score
 from pathlib import Path
 from pipeline_config import config
+import joblib
 
 SEASONS = config['seasons']
 file_name = file_name = f'{SEASONS[0]}.csv' if len(SEASONS) == 1 else f'{SEASONS[0]}-to-{SEASONS[len(SEASONS) - 1]}.csv'
-path = Path(__file__).resolve().parent.parent / 'data' / 'engineered' / file_name
+path = Path(__file__).resolve().parent.parent.parent / 'data' / 'engineered' / file_name
 assert path.exists()
 df = pd.read_csv(path)
 
@@ -54,7 +55,7 @@ print('Best hyperparameters: ', grid_search.best_params_)
 
 # Testing phase
 
-test_df = pd.read_csv(Path(__file__).resolve().parent.parent / 'data' / 'engineered' / '20252026.csv')
+test_df = pd.read_csv(Path(__file__).resolve().parent.parent.parent / 'data' / 'engineered' / '20252026.csv')
 X_test = test_df.drop(columns='Win')
 y_test = test_df['Win']
 y_pred = best_model.predict(X_test)
@@ -69,3 +70,7 @@ print('accuracy:' ,accuracy)
 
 y_prob = best_model.predict_proba(X_test)[:, 1]
 print("Log loss:", log_loss(y_test, y_prob))
+
+model_path = Path(__file__).resolve().parent.parent.parent / 'model' / 'model.pkl'
+path.parent.mkdir(parents=True, exist_ok=True)
+joblib.dump(best_model, model_path)
