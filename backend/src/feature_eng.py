@@ -49,10 +49,10 @@ for season in SEASONS:
         mask = df_raw_opp.index[df_raw_opp['Game'].str.contains(date_str)]
         assert len(mask) == 1
         row = rolling_stats_opp.loc[mask]
-        row = row.rename(columns=lambda x: f'{x}_rolling_opp')
         rows.append(row)
 
     df_eng_opp = pd.concat(rows, ignore_index=True)
+    df_eng_opp = df_eng_opp.rename(columns=lambda x: f'{x}_rolling_opp')
     df_eng = df_eng.reset_index(drop=True)
     df_eng_combined = pd.concat(objs=[df_eng, df_eng_opp], axis=1)
     df_eng_combined = df_eng_combined.dropna()
